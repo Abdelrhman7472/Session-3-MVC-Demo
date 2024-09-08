@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Department>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+    <a class="btn btn-primary mt-3" asp-controller="Departments" asp-action="Create">Create New Department</a>
+</div>
+@if(Model !=null && Model.Any())
+
+{
+    <h1>All Departments</h1>
+
+    <table class="table table-striped table-hover">
+        <thead>
+
+            <tr>
+                <td> @Html.DisplayNameFor(d => d.Code)</td>
+                <td> @Html.DisplayNameFor(d => d.Name)</td>
+                <td> @Html.DisplayNameFor(d => d.DateOfCreation)</td>
+
+                <td> Detalis</td>
+                <td> Edit</td>
+                <td> Delete</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Code</td>
+                    <td>@item.Name</td>
+                    <td>@item.DateOfCreation</td>
+                    <td> <a asp-action="Details">Details </a></td>
+                    <td> <a asp-action="Edit">Edit </a></td>
+                    <td> <a asp-action="Delete">Delete </a></td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+}
+else
+{
+
+    <div class="mt-5 alert-warning">  
+
+        <h2>No Department</h2>
+
+    </div>
+}
