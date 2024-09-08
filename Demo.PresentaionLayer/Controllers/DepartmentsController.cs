@@ -22,7 +22,7 @@ namespace Demo.PresentaionLayer.Controllers
         public IActionResult Create() 
         { 
           return View();
-
+            
         }
 
         [HttpPost]
@@ -37,12 +37,55 @@ namespace Demo.PresentaionLayer.Controllers
 
         }
 
-        public IActionResult Details()
+        public IActionResult Details(int? id )
         {
-            var departments = DepartmentRepository.Get();
+            if (!id.HasValue) 
+                return BadRequest();
+            
+            
+            var departments = DepartmentRepository.Get(id.Value);
+
+            if (departments is null)  return NotFound(); 
+
+            return View(departments);
+        }  
+        public IActionResult Edit(int? id )
+        {
+            if (!id.HasValue) 
+                return BadRequest();
+            
+            
+            var departments = DepartmentRepository.Get(id.Value);
+
+            if (departments is null)  return NotFound(); 
+
             return View(departments);
         }
+        [HttpPost]
+        public IActionResult Edit([FromRoute]int id,Department department)
+        {
+            if(id!=department.Id)return BadRequest();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    DepartmentRepository.Update(department);
+                    return RedirectToAction(nameof(Index));
 
+                }
+
+                catch (Exception ex)
+                { 
+                    ModelState.AddModelError("",ex.Message);
+                
+                
+                }
+
+            }
+            return View(department);
+
+        }
+    
 
 
     }
