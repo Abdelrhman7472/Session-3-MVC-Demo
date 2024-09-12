@@ -1,5 +1,4 @@
-﻿using Demo.DataAccessLayer.Data;
-using Demo.DataAccessLayer.Models;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Demo.BusinessLogicLayer.Repositories
 {
-    public class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository /*IGenericRepository<Department>*/
     { //   private DataContext dataContext=new DataContext(); 
         /*
          Dependancy Injection:
@@ -25,38 +24,8 @@ namespace Demo.BusinessLogicLayer.Repositories
 
 
         //private readonly DataContext _dataContext = new DataContext();
-        private readonly DataContext _dataContext;
-
-        public DepartmentRepository(DataContext dataContext)
+        public DepartmentRepository(DataContext dbContext) : base(dbContext)
         {
-            _dataContext = dataContext;
         }
-        public Department? Get(int id) => _dataContext.Departments.Find(id);
-
-        public IEnumerable<Department> GetAll() => _dataContext.Departments.ToList();
-
-        public int Create(Department department)
-        {
-            _dataContext.Departments.Add(department);
-            return _dataContext.SaveChanges();
-
-        }
-        public int Delete(Department department)
-        {
-            _dataContext.Departments.Remove(department);
-            return _dataContext.SaveChanges();
-
-        }
-        public int Update(Department department)
-        {
-            _dataContext.Departments.Update(department);
-            return _dataContext.SaveChanges();
-
-        }
-
-
-
-
-
     }
 }
