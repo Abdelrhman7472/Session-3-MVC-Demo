@@ -17,5 +17,7 @@ namespace Demo.DataAccessLayer.Models
         [Display(Name="Displayed At")]
         public DateTime DateOfCreation { get; set; }
 
+        ICollection<Employee>? Employees { get;set; }=new HashSet<Employee>();
+
     }
 }

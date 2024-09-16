@@ -1,6 +1,4 @@
-using Demo.PresentaionLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+
 
 namespace Demo.PresentaionLayer.Controllers
 {

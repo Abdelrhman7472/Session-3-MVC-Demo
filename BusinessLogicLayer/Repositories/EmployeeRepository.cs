@@ -1,5 +1,5 @@
 ﻿
-using System;
+using System; 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,10 +14,15 @@ namespace Demo.BusinessLogicLayer.Repositories
 
         }
 
-        public IEnumerable<Employee> GetAll(string Address)
+        public IEnumerable<Employee> GetAll(string name)    
         {
-          return _dbContext.Set<Employee>().Where(e=>e.Address.ToLower() == Address.ToLower()).ToList(); 
+          return _dbContext.Set<Employee>().Where(e=>e.Name.ToLower().Contains(name.ToLower())).Include(e => e.Department).ToList(); 
 
+        }
+
+        public IEnumerable<Employee> GetAllWithDepartment()
+        {
+            return _dbContext.Set<Employee>().Include(e=>e.Department).ToList();
         }
     }
 }

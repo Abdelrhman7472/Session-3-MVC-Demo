@@ -15,27 +15,16 @@ namespace Demo.BusinessLogicLayer.Repositories
             _dbContext = dbContext;
         }
 
-        public int Create(TEntity entity)
-        {
-            _dbContext.Set<TEntity>().Add(entity);
-            return _dbContext.SaveChanges();
-        }
+        public void Create(TEntity entity) => _dbContext.Set<TEntity>().Add(entity);
 
-        public int Delete(TEntity entity)
-        {
-            _dbContext.Set<TEntity>().Remove(entity);
-            return _dbContext.SaveChanges();
-        }
 
-        public TEntity? Get(int id)=>_dbContext.Set<TEntity>().Find(id);
-        
+        public void Delete(TEntity entity) => _dbContext.Set<TEntity>().Remove(entity);
+
+        public TEntity? Get(int id) => _dbContext.Set<TEntity>().Find(id);
+
 
         public IEnumerable<TEntity> GetAll() => _dbContext.Set<TEntity>().ToList();
-       
-        public int Update(TEntity entity)
-        {
-            _dbContext.Set<TEntity>().Update(entity);
-            return _dbContext.SaveChanges();
-        }
+
+        public void Update(TEntity entity) => _dbContext.Set<TEntity>().Update(entity);
     }
 }

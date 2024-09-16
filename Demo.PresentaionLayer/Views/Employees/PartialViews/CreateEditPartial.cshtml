@@ -1,5 +1,5 @@
-﻿@model Employee
-
+﻿@model EmployeeViewModel
+<input hidden asp-for="ImageName"/>
 <div class="form-group">
     <label asp-for="Name"></label>
     <input class="form-control" asp-for="Name" />
@@ -16,11 +16,24 @@
     <span asp-validation-for="Age" class="text-danger"></span>
 
 </div>
+<div class="form-group">
+    <label asp-for="Image"></label>
+    <input class="form-control" asp-for="Image" />
+    <span asp-validation-for="Image" class="text-danger"></span>
+
+</div>
 
 <div class="form-group">
     <label asp-for="Phone"></label>
     <input class="form-control" asp-for="Phone" />
     <span asp-validation-for="Phone" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Department"></label>
+    <select class="form-control" asp-items="ViewBag.Departments" asp-for="DepartmentId">
+        <option value="@null" class="text-center">Select Department</option>
+    </select>
 </div>
 <div class="form-group">
     <label asp-for="Email"></label>

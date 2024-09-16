@@ -1,7 +1,4 @@
-using Demo.BusinessLogicLayer.Interfaces;
-using Demo.BusinessLogicLayer.Repositories;
-using Demo.DataAccessLayer.Data;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Demo.PresentaionLayer
 {
@@ -15,9 +12,10 @@ namespace Demo.PresentaionLayer
             builder.Services.AddControllersWithViews();
             //builder.Services.AddScoped<DataContext>();
             //builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
             builder.Services.AddDbContext<DataContext>(options =>
 

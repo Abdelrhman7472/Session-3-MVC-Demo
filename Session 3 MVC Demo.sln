@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.PresentaionLayer", "Demo.PresentaionLayer\Demo.PresentaionLayer.csproj", "{B27AD7E7-000A-4F7F-A50C-A488A9E6A65D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.PresentaionLayer", "Demo.PresentaionLayer\Demo.PresentaionLayer.csproj", "{B27AD7E7-000A-4F7F-A50C-A488A9E6A65D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.BusinessLogicLayer", "BusinessLogicLayer\Demo.BusinessLogicLayer.csproj", "{714B4785-6DB8-4BC7-9FBF-41CDA8E96C26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.BusinessLogicLayer", "BusinessLogicLayer\Demo.BusinessLogicLayer.csproj", "{714B4785-6DB8-4BC7-9FBF-41CDA8E96C26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.DataAccessLayer", "Demo.DataAccessLayer\Demo.DataAccessLayer.csproj", "{F7FA8B93-2ECC-495E-B3E0-A32094B4C442}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.DataAccessLayer", "Demo.DataAccessLayer\Demo.DataAccessLayer.csproj", "{F7FA8B93-2ECC-495E-B3E0-A32094B4C442}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

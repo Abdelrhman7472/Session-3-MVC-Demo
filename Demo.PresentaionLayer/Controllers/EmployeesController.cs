@@ -1,28 +1,42 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace Demo.PresentaionLayer.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly IEmployeeRepository _repo;
 
-        public EmployeesController(IEmployeeRepository employeeRepository)
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        public EmployeesController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _repo = employeeRepository;
+ 
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? searchValue)
         {
-            //ViewData=> Dictionary<string,object>
-            //ViewData["Message"] = new Employee { Name="Abdo"};
-            ViewBag.Employee = new Employee { Name = "Seif" };
-            var employees = _repo.GetAll();
-            return View(employees);
+            var employees = Enumerable.Empty<Employee>();
+
+            if (string.IsNullOrWhiteSpace(searchValue))
+            {
+                 employees = _unitOfWork.Employees.GetAllWithDepartment();
+            }
+            else employees= _unitOfWork.Employees.GetAll(searchValue);
+            var employeesViewModel = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+
+            return View(employeesViewModel);
+
+
         }
 
         public IActionResult Create()
         {
+            var departments= _unitOfWork.Departments.GetAll();
+            SelectList listItems = new SelectList(departments,"Id","Name");
+            ViewBag.Departments = listItems;
             return View();
 
         }
@@ -31,13 +45,21 @@ namespace Demo.PresentaionLayer.Controllers
         [ValidateAntiForgeryToken]
 
 
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmployeeViewModel employeeVM)
         {
+
             if (!ModelState.IsValid)
             {
-                return View(employee);
+                return View(employeeVM);
             }
-            _repo.Create(employee);
+
+            if(employeeVM.Image is not null)
+                employeeVM.ImageName = DocumentSettings.UploadFile(employeeVM.Image, "Images");
+
+            var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+
+            _unitOfWork.Employees.Create(employee);
+            _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
 
         }
@@ -50,15 +72,19 @@ namespace Demo.PresentaionLayer.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVM)
         {
-            if (id != employee.Id) return BadRequest();
+            if (id != employeeVM.Id) return BadRequest();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (_repo.Update(employee)> 0);
-                    TempData["Message"] = "Employee Updated Successfuly";   
+                    if (employeeVM.Image is not null)
+                        employeeVM.ImageName = DocumentSettings.UploadFile(employeeVM.Image, "Images");
+                    var employee=_mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+                    _unitOfWork.Employees.Update(employee);
+                    if (_unitOfWork.SaveChanges() > 0)
+                     TempData["Message"] = "Employee Updated Successfuly"; 
 
                     return RedirectToAction(nameof(Index));
 
@@ -72,7 +98,7 @@ namespace Demo.PresentaionLayer.Controllers
                 }
 
             }
-            return View(employee);
+            return View(employeeVM);
 
         }
 
@@ -85,11 +111,13 @@ namespace Demo.PresentaionLayer.Controllers
         public IActionResult ConfirmDelete(int? id)
         {
             if (!id.HasValue) return BadRequest();
-            var employee = _repo.Get(id.Value);
+            var employee = _unitOfWork.Employees.Get(id.Value);
             if (employee is null) return NotFound();
             try
             {
-                _repo.Delete(employee);
+                _unitOfWork.Employees.Delete(employee);
+                if(_unitOfWork.SaveChanges()>0 &&employee.ImageName is not null)
+                    DocumentSettings.DeleteFile("Images" ,employee.ImageName);
                 return RedirectToAction(nameof(Index));
 
             }
@@ -107,15 +135,20 @@ namespace Demo.PresentaionLayer.Controllers
 
         private IActionResult EmployeeControllerHandler(int? id, string viewName)
         {
-
+            if (viewName == nameof(Edit))
+            {
+                var departments = _unitOfWork.Departments.GetAll();
+                SelectList listItems = new SelectList(departments, "Id", "Name");
+                ViewBag.Departments = listItems;
+            }
             if (!id.HasValue) return BadRequest();
 
 
-            var employees = _repo.Get(id.Value);
+            var employees = _unitOfWork.Employees.Get(id.Value);
 
             if (employees is null) return NotFound();
-
-            return View(viewName, employees);
+            var employeeVM = _mapper.Map<Employee,EmployeeViewModel>(employees);
+            return View(viewName,employeeVM );
 
 
         }
