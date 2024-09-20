@@ -4,6 +4,7 @@ using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace Demo.PresentaionLayer.Controllers
 {
+    [Authorize]
     public class EmployeesController : Controller
     {
 
@@ -15,7 +16,7 @@ namespace Demo.PresentaionLayer.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
+        [AllowAnonymous]
         public IActionResult Index(string? searchValue)
         {
             var employees = Enumerable.Empty<Employee>();
@@ -43,8 +44,6 @@ namespace Demo.PresentaionLayer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-
         public IActionResult Create(EmployeeViewModel employeeVM)
         {
 
@@ -75,7 +74,7 @@ namespace Demo.PresentaionLayer.Controllers
         public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVM)
         {
             if (id != employeeVM.Id) return BadRequest();
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {

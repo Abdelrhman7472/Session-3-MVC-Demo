@@ -12,4 +12,5 @@ global using AutoMapper;
 global using Humanizer;
 global using System.Reflection;
 global using Demo.PresentaionLayer.Utilities;
-
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Authorization;

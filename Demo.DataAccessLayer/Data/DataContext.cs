@@ -1,6 +1,4 @@
-﻿using Demo.DataAccessLayer.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Demo.DataAccessLayer.Data
 {
-    public  class DataContext :DbContext
+    public  class DataContext :IdentityDbContext<ApplicationUser>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -18,16 +16,17 @@ namespace Demo.DataAccessLayer.Data
         //{
         //    optionsBuilder.UseSqlServer("ConnectionString ");
         //}
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Employee>().Property(e=>e.Salary).HasColumnType("decimal(18,5)");
+
+        }
 
 
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Employee>().Property(e=>e.Salary).HasColumnType("decimal(18,5)");
-
-        }
     }
 }

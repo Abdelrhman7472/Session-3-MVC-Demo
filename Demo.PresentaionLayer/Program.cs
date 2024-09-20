@@ -10,12 +10,11 @@ namespace Demo.PresentaionLayer
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            //builder.Services.AddScoped<DataContext>();
-            //builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
-            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
+            builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
+                .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
 
             builder.Services.AddDbContext<DataContext>(options =>
 
@@ -23,10 +22,13 @@ namespace Demo.PresentaionLayer
 
             );
 
+			///builder.Services.AddScoped<DataContext>();
+			///builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
+			///builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+			///builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 
-
-            var app = builder.Build();
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -41,7 +43,7 @@ namespace Demo.PresentaionLayer
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
