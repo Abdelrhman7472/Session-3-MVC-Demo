@@ -1,0 +1,15 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    
+
+<partial name="PartialViews/DetailsDeletePartial"></partial>
+
+<div class="mt-3">
+    <a class="btn btn-success" asp-action="Index">Back</a>
+    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+</div>
+    

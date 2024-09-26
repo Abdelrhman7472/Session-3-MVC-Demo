@@ -22,11 +22,14 @@ namespace Demo.PresentaionLayer
 
             );
 
-			///builder.Services.AddScoped<DataContext>();
-			///builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
-			///builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-			///builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
+            ///builder.Services.AddScoped<DataContext>();
+            ///builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
+            ///builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            ///builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+               
+            });
 
 			var app = builder.Build();
 
@@ -42,7 +45,7 @@ namespace Demo.PresentaionLayer
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

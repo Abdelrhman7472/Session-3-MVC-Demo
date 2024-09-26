@@ -8,8 +8,8 @@ namespace Demo.BusinessLogicLayer.Interfaces
 {
     public interface IEmployeeRepository:IGenericRepository<Employee>
     {
-        public IEnumerable<Employee> GetAll(string Name); 
-        public IEnumerable<Employee> GetAllWithDepartment(); 
+        public Task<IEnumerable<Employee>> GetAllAsync(string Name); 
+        public Task<IEnumerable<Employee>> GetAllWithDepartmentAsync(); 
    
     }
 }

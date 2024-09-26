@@ -24,7 +24,7 @@ namespace Demo.BusinessLogicLayer.Repositories
         public IDepartmentRepository Departments => _departmentRepository.Value;
 
 
-        public int SaveChanges()=>_dataContext.SaveChanges();
+        public async Task<int> SaveChangesAsync()=> await _dataContext.SaveChangesAsync();
   
     }
 }

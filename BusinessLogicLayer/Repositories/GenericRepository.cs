@@ -15,15 +15,15 @@ namespace Demo.BusinessLogicLayer.Repositories
             _dbContext = dbContext;
         }
 
-        public void Create(TEntity entity) => _dbContext.Set<TEntity>().Add(entity);
+        public async Task AddAsync(TEntity entity) => await _dbContext.Set<TEntity>().AddAsync(entity);
 
-
+            
         public void Delete(TEntity entity) => _dbContext.Set<TEntity>().Remove(entity);
 
-        public TEntity? Get(int id) => _dbContext.Set<TEntity>().Find(id);
+        public async Task<TEntity?> GetAsync(int id) => await _dbContext.Set<TEntity>().FindAsync(id);
 
 
-        public IEnumerable<TEntity> GetAll() => _dbContext.Set<TEntity>().ToList();
+        public async Task<IEnumerable<TEntity>> GetAllAsync() => await _dbContext.Set<TEntity>().ToListAsync();
 
         public void Update(TEntity entity) => _dbContext.Set<TEntity>().Update(entity);
     }

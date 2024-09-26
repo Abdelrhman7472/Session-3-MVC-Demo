@@ -15,7 +15,7 @@ namespace Demo.PresentaionLayer.Controllers
 
         public IActionResult Index()
         { 
-            var departments=_repo.GetAll();
+            var departments=_repo.GetAllAsync();
             return View(departments);
         }
 
@@ -35,15 +35,15 @@ namespace Demo.PresentaionLayer.Controllers
             {
                 return View(department);
             }
-            _repo.Create(department);
+            _repo.AddAsync(department);
             return RedirectToAction(nameof(Index));
 
         }
 
-        public IActionResult Details(int? id ) => DepartmentControllerHandler(id,nameof(Details));
+        public async Task<IActionResult> Details(int? id) => await DepartmentControllerHandler(id, nameof(Details));
 
         
-        public IActionResult Edit(int? id ) => DepartmentControllerHandler(id,nameof(Edit));
+        public async Task<IActionResult> Edit(int? id) => await DepartmentControllerHandler(id, nameof(Edit));
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -72,16 +72,16 @@ namespace Demo.PresentaionLayer.Controllers
 
         }
 
-        public IActionResult Delete(int? id) => DepartmentControllerHandler(id,nameof(Delete));
+        public async Task<IActionResult> Delete(int? id) => await DepartmentControllerHandler(id,nameof(Delete));
      
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
 
-        public IActionResult ConfirmDelete(int? id ) 
+        public async Task<IActionResult> ConfirmDelete(int? id ) 
         { 
             if (!id.HasValue)  return BadRequest();
-            var department= _repo.Get(id.Value);
+            var department= await _repo.GetAsync(id.Value);
             if (department is null) return NotFound();
             try
             { 
@@ -100,13 +100,13 @@ namespace Demo.PresentaionLayer.Controllers
         }
 
 
-        private IActionResult DepartmentControllerHandler(int? id ,string viewName)
+        private async Task<IActionResult> DepartmentControllerHandler(int? id ,string viewName)
         {
 
             if (!id.HasValue) return BadRequest();
 
 
-            var departments = _repo.Get(id.Value);
+            var departments = await _repo.GetAsync(id.Value);
 
             if (departments is null) return NotFound();
 

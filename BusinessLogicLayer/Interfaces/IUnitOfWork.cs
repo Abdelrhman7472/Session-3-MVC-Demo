@@ -12,6 +12,6 @@ namespace Demo.BusinessLogicLayer.Interfaces
 
         public IDepartmentRepository Departments { get; }
 
-        public int SaveChanges(); 
+        public Task<int> SaveChangesAsync(); 
     }
 }

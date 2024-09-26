@@ -1,0 +1,20 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form asp-action="Edit" method="post">
+
+    <partial name="PartialViews/CreateEditPartial"></partial>
+
+
+    <div class="mt-3">
+        <button class="btn btn-success" type="submit">Save</button>
+        <a class="btn btn-danger" asp-action="Index">Cancel</a>
+    </div>
+
+
+</form>
+

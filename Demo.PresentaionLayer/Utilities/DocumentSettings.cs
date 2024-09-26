@@ -2,7 +2,7 @@
 {
     public static class DocumentSettings
     {
-        public static string UploadFile(IFormFile file, string folderName)
+        public static async Task<string> UploadFileAsync(IFormFile file, string folderName)
         {
             //string folderPath = Directory.GetCurrentDirectory() + @"\wwwroot\Files";
             string folderPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Files",folderName);// create folder path
@@ -13,7 +13,7 @@
 
             using var stream = new FileStream(filePath,FileMode.Create);//create file to save file
 
-            file.CopyTo(stream); //copy file to fileStream
+           await file.CopyToAsync(stream); //copy file to fileStream
 
             return fileName;
          }

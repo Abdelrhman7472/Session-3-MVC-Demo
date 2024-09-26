@@ -31,7 +31,7 @@
                     <td>@item.Code</td>
                     <td>@item.Name</td>
                     <td>@item.DateOfCreation</td>
-                    <partial name="_ButtonsPartialView" Model="@item.Id "></partial>
+                    <partial name="_ButtonsPartialView" Model="@item.Id.ToString() "></partial>
                 </tr>
             }
 

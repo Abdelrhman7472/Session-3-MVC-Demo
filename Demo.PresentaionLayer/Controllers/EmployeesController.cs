@@ -17,15 +17,15 @@ namespace Demo.PresentaionLayer.Controllers
             _mapper = mapper;
         }
         [AllowAnonymous]
-        public IActionResult Index(string? searchValue)
+        public async Task<IActionResult> Index(string? searchValue)
         {
             var employees = Enumerable.Empty<Employee>();
 
             if (string.IsNullOrWhiteSpace(searchValue))
             {
-                 employees = _unitOfWork.Employees.GetAllWithDepartment();
+                 employees =  await _unitOfWork.Employees.GetAllWithDepartmentAsync();
             }
-            else employees= _unitOfWork.Employees.GetAll(searchValue);
+            else employees= await _unitOfWork.Employees.GetAllAsync(searchValue);
             var employeesViewModel = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
             return View(employeesViewModel);
@@ -33,9 +33,9 @@ namespace Demo.PresentaionLayer.Controllers
 
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var departments= _unitOfWork.Departments.GetAll();
+            var departments= await _unitOfWork.Departments.GetAllAsync();
             SelectList listItems = new SelectList(departments,"Id","Name");
             ViewBag.Departments = listItems;
             return View();
@@ -44,7 +44,7 @@ namespace Demo.PresentaionLayer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeViewModel employeeVM)
+        public async Task<IActionResult> Create(EmployeeViewModel employeeVM)
         {
 
             if (!ModelState.IsValid)
@@ -53,25 +53,25 @@ namespace Demo.PresentaionLayer.Controllers
             }
 
             if(employeeVM.Image is not null)
-                employeeVM.ImageName = DocumentSettings.UploadFile(employeeVM.Image, "Images");
+                employeeVM.ImageName = await DocumentSettings.UploadFileAsync(employeeVM.Image, "Images");
 
             var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
-            _unitOfWork.Employees.Create(employee);
-            _unitOfWork.SaveChanges();
+           await _unitOfWork.Employees.AddAsync(employee);
+            await _unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
 
         }
 
-        public IActionResult Details(int? id) => EmployeeControllerHandler(id, nameof(Details));
+        public async Task<IActionResult> Details(int? id) =>await EmployeeControllerHandler(id, nameof(Details));
 
 
-        public IActionResult Edit(int? id) => EmployeeControllerHandler(id, nameof(Edit));
+        public async Task<IActionResult> Edit(int? id) => await EmployeeControllerHandler(id, nameof(Edit));
 
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVM)
+        public async Task<IActionResult> Edit([FromRoute] int id, EmployeeViewModel employeeVM)
         {
             if (id != employeeVM.Id) return BadRequest();
             if (!ModelState.IsValid)
@@ -79,10 +79,10 @@ namespace Demo.PresentaionLayer.Controllers
                 try
                 {
                     if (employeeVM.Image is not null)
-                        employeeVM.ImageName = DocumentSettings.UploadFile(employeeVM.Image, "Images");
+                        employeeVM.ImageName = await DocumentSettings.UploadFileAsync(employeeVM.Image, "Images");
                     var employee=_mapper.Map<EmployeeViewModel, Employee>(employeeVM);
                     _unitOfWork.Employees.Update(employee);
-                    if (_unitOfWork.SaveChanges() > 0)
+                    if (await _unitOfWork.SaveChangesAsync() > 0)
                      TempData["Message"] = "Employee Updated Successfuly"; 
 
                     return RedirectToAction(nameof(Index));
@@ -101,21 +101,21 @@ namespace Demo.PresentaionLayer.Controllers
 
         }
 
-        public IActionResult Delete(int? id) => EmployeeControllerHandler(id, nameof(Delete));
+        public async Task<IActionResult> Delete(int? id) =>await EmployeeControllerHandler(id, nameof(Delete));
 
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
 
-        public IActionResult ConfirmDelete(int? id)
+        public async Task<IActionResult> ConfirmDelete(int? id)
         {
             if (!id.HasValue) return BadRequest();
-            var employee = _unitOfWork.Employees.Get(id.Value);
+            var employee =await _unitOfWork.Employees.GetAsync(id.Value);
             if (employee is null) return NotFound();
             try
             {
                 _unitOfWork.Employees.Delete(employee);
-                if(_unitOfWork.SaveChanges()>0 &&employee.ImageName is not null)
+                if(await _unitOfWork.SaveChangesAsync()>0 &&employee.ImageName is not null)
                     DocumentSettings.DeleteFile("Images" ,employee.ImageName);
                 return RedirectToAction(nameof(Index));
 
@@ -132,18 +132,18 @@ namespace Demo.PresentaionLayer.Controllers
         }
 
 
-        private IActionResult EmployeeControllerHandler(int? id, string viewName)
+        private async Task<IActionResult> EmployeeControllerHandler(int? id, string viewName)
         {
             if (viewName == nameof(Edit))
             {
-                var departments = _unitOfWork.Departments.GetAll();
+                var departments = await _unitOfWork.Departments.GetAllAsync();
                 SelectList listItems = new SelectList(departments, "Id", "Name");
                 ViewBag.Departments = listItems;
             }
             if (!id.HasValue) return BadRequest();
 
 
-            var employees = _unitOfWork.Employees.Get(id.Value);
+            var employees = await _unitOfWork.Employees.GetAsync(id.Value);
 
             if (employees is null) return NotFound();
             var employeeVM = _mapper.Map<Employee,EmployeeViewModel>(employees);
